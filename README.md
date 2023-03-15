@@ -71,7 +71,6 @@ realce sintáctico en Python del mismo.
 Eduard Gibert Ramon
 
 """
-from collections import Counter as C 
 
 def esPrimo(numero):
     """
@@ -111,46 +110,50 @@ def descompon(numero):
             lista.append(prueba)            
             numero //= prueba     
                             
-    return tuple(lista)                   
+    return tuple(lista)      
+
+
+def dicFact(numero1,numero2):
+   
+    factores1 = descompon(numero1)
+    factores2 = descompon(numero2)
+
+    factores = set(factores1 + factores2)  
+    dic_fact1 ={factor : 0 for factor in factores } 
+    dic_fact2 ={factor : 0 for factor in factores} 
+    for factor in factores1 : dic_fact1[factor] += 1
+    for factor in factores2 : dic_fact2[factor] += 1
+  
+    return dic_fact1,dic_fact2
     
-def mcm(num1, num2):
+
+    
+def mcm(numero1, numero2):
     """
     Devuelve el mínimo común múltiplo de sus argumentos.
 
     >>> mcm(90, 14)
     630
     """
-    
-    numero1 = C(descompon(num1))
-    numero2 = C(descompon(num2))
-
-    
-    fact = numero1 | numero2  
-
-    mcm = 1 
-    for factor, exp in fact.items():
-        mcm *= (factor**exp)
-
-    return mcm                     
+    mcm = 1
+    dicFact1, dicFact2 = dicFact(numero1, numero2)
+    for factor in  dicFact1 | dicFact2:
+        mcm *= factor ** max(dicFact1[factor],dicFact2[factor])
+    return mcm                   
 
 
-# Usamos un codigo muy parecido al del MCM pero cambiando algunas cosas
-def mcd(num1, num2):
+# Usamos un codigo muy parecido al del mcm pero con un pequeño cambio
+def mcd(numero1, numero2):
     """
     Devuelve el máximo común divisor de sus argumentos.
-    
+
     >>> mcd(924, 780)
     12
     """
-    numero1 = C(descompon(num1))
-    numero2 = C(descompon(num2))
-
-    fact = numero1 & numero2 
-
-    mcd = 1 
-    for factor, exp in fact.items():
-        mcd *= (factor**exp)
-
+    mcd = 1
+    dicFact1, dicFact2 = dicFact(numero1, numero2)
+    for factor in  dicFact1 | dicFact2:
+        mcd *= factor ** min(dicFact1[factor],dicFact2[factor])
     return mcd
 
  
